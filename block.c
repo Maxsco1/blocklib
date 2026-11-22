@@ -2,6 +2,7 @@
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 unsigned char *pad(unsigned char *bytes, size_t bytes_length,
                    size_t bytes_to_pad) {
@@ -81,3 +82,34 @@ void block_print(Block *block) {
   printf("]\n");
 }
 
+Block *block_apply(const Block *block1, const Block *block2,
+                   unsigned char binary_byte_op(unsigned char byte1,
+                                                unsigned char byte2)) {
+  if (block1 == NULL || block2 == NULL) {
+    return NULL;
+  }
+
+  if (block1->block_size != block2->block_size) {
+    fprintf(stderr, "To apply a function to two blocks, they must have the "
+                    "same block_size\n");
+    return NULL;
+  }
+
+  if (block1->bytes_held != block2->bytes_held) {
+    fprintf(stderr, "To apply a function to two blocks, they must hold the "
+                    "same number of bytes\n");
+    return NULL;
+  }
+
+  Block *result_block = block_new(block1->block_size);
+  if (result_block == NULL) {
+    fprintf(stderr, "Failed to create new block\n");
+    return NULL;
+  }
+
+  for (size_t i = 0; i < block1->block_size; i++) {
+    result_block->bytes[i] = binary_byte_op(block1->bytes[i], block2->bytes[i]);
+  }
+
+  return result_block;
+}
