@@ -9,4 +9,6 @@ typedef struct Block {
 } Block;
 
 Block *block_new(size_t block_size);
+Block *block_from_bytes(unsigned char *bytes, size_t bytes_length,
+                        size_t block_size);
 #endif // !BLOCK_H
