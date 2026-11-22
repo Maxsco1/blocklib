@@ -71,3 +71,13 @@ Block *block_from_bytes(unsigned char *bytes, size_t bytes_length,
   return block;
 }
 
+void block_print(Block *block) {
+  printf("[ ");
+
+  for (size_t i = 0; i < block->block_size; i++) {
+    printf("%02x ", block->bytes[i]);
+  }
+
+  printf("]\n");
+}
+
